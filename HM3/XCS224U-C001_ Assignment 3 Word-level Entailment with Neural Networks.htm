@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<!-- saved from url=(0076)https://learning.stanford.edu/online/mod/page/view.php?id=19501&program=scpd -->
+<html dir="ltr" lang="en" xml:lang="en" class="yui3-js-enabled"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>XCS224U-C001: Assignment 3 Word-level Entailment with Neural Networks</title>
+    <link rel="shortcut icon" href="https://learning.stanford.edu/online/theme/image.php/stanford/theme/1584077912/favicon">
+    
+<meta name="keywords" content="moodle, XCS224U-C001: Assignment 3 Word-level Entailment with Neural Networks">
+<link rel="stylesheet" type="text/css" href="./XCS224U-C001_ Assignment 3 Word-level Entailment with Neural Networks_files/combo"><script async="" src="./XCS224U-C001_ Assignment 3 Word-level Entailment with Neural Networks_files/analytics.js"></script><script charset="utf-8" id="yui_3_17_2_1_1585979771252_8" src="./XCS224U-C001_ Assignment 3 Word-level Entailment with Neural Networks_files/combo(1)" async=""></script><link charset="utf-8" rel="stylesheet" id="yui_3_17_2_1_1585979771252_18" href="./XCS224U-C001_ Assignment 3 Word-level Entailment with Neural Networks_files/combo(2)"><script charset="utf-8" id="yui_3_17_2_1_1585979771252_19" src="./XCS224U-C001_ Assignment 3 Word-level Entailment with Neural Networks_files/combo(3)" async=""></script><script charset="utf-8" id="yui_3_17_2_1_1585979771252_28" src="./XCS224U-C001_ Assignment 3 Word-level Entailment with Neural Networks_files/MathJax.js" async=""></script><script charset="utf-8" id="yui_3_17_2_1_1585979771252_31" src="./XCS224U-C001_ Assignment 3 Word-level Entailment with Neural Networks_files/combo(4)" async=""></script><script charset="utf-8" id="yui_3_17_2_1_1585979771252_32" src="./XCS224U-C001_ Assignment 3 Word-level Entailment with Neural Networks_files/combo(5)" async=""></script><script id="firstthemesheet" type="text/css">/** Required in order to fix style inclusion problems in IE with YUI **/</script><link rel="stylesheet" type="text/css" href="./XCS224U-C001_ Assignment 3 Word-level Entailment with Neural Networks_files/styles.php">
+<script type="text/javascript">
+//<![CDATA[
+var M = {}; M.yui = {};
+M.pageloadstarttime = new Date();
+M.cfg = {"wwwroot":"https:\/\/learning.stanford.edu\/online","sesskey":"H8vsmaAx5N","themerev":"1584077912","slasharguments":1,"theme":"stanford","iconsystemmodule":"core\/icon_system_standard","jsrev":"1584077912","admin":"admin","svgicons":true,"usertimezone":"America\/Los_Angeles","contextid":92063};var yui1ConfigFn = function(me) {if(/-skin|reset|fonts|grids|base/.test(me.name)){me.type='css';me.path=me.path.replace(/\.js/,'.css');me.path=me.path.replace(/\/yui2-skin/,'/assets/skins/sam/yui2-skin')}};
+var yui2ConfigFn = function(me) {var parts=me.name.replace(/^moodle-/,'').split('-'),component=parts.shift(),module=parts[0],min='-min';if(/-(skin|core)$/.test(me.name)){parts.pop();me.type='css';min=''}
+if(module){var filename=parts.join('-');me.path=component+'/'+module+'/'+filename+min+'.'+me.type}else{me.path=component+'/'+component+'.'+me.type}};
+YUI_config = {"debug":false,"base":"https:\/\/learning.stanford.edu\/online\/lib\/yuilib\/3.17.2\/","comboBase":"https:\/\/learning.stanford.edu\/online\/theme\/yui_combo.php?","combine":true,"filter":null,"insertBefore":"firstthemesheet","groups":{"yui2":{"base":"https:\/\/learning.stanford.edu\/online\/lib\/yuilib\/2in3\/2.9.0\/build\/","comboBase":"https:\/\/learning.stanford.edu\/online\/theme\/yui_combo.php?","combine":true,"ext":false,"root":"2in3\/2.9.0\/build\/","patterns":{"yui2-":{"group":"yui2","configFn":yui1ConfigFn}}},"moodle":{"name":"moodle","base":"https:\/\/learning.stanford.edu\/online\/theme\/yui_combo.php?m\/1584077912\/","combine":true,"comboBase":"https:\/\/learning.stanford.edu\/online\/theme\/yui_combo.php?","ext":false,"root":"m\/1584077912\/","patterns":{"moodle-":{"group":"moodle","configFn":yui2ConfigFn}},"filter":null,"modules":{"moodle-core-actionmenu":{"requires":["base","event","node-event-simulate"]},"moodle-core-dragdrop":{"requires":["base","node","io","dom","dd","event-key","event-focus","moodle-core-notification"]},"moodle-core-maintenancemodetimer":{"requires":["base","node"]},"moodle-core-tooltip":{"requires":["base","node","io-base","moodle-core-notification-dialogue","json-parse","widget-position","widget-position-align","event-outside","cache-base"]},"moodle-core-checknet":{"requires":["base-base","moodle-core-notification-alert","io-base"]},"moodle-core-dock":{"requires":["base","node","event-custom","event-mouseenter","event-resize","escape","moodle-core-dock-loader","moodle-core-event"]},"moodle-core-dock-loader":{"requires":["escape"]},"moodle-core-chooserdialogue":{"requires":["base","panel","moodle-core-notification"]},"moodle-core-notification":{"requires":["moodle-core-notification-dialogue","moodle-core-notification-alert","moodle-core-notification-confirm","moodle-core-notification-exception","moodle-core-notification-ajaxexception"]},"moodle-core-notification-dialogue":{"requires":["base","node","panel","escape","event-key","dd-plugin","moodle-core-widget-focusafterclose","moodle-core-lockscroll"]},"moodle-core-notification-alert":{"requires":["moodle-core-notification-dialogue"]},"moodle-core-notification-confirm":{"requires":["moodle-core-notification-dialogue"]},"moodle-core-notification-exception":{"requires":["moodle-core-notification-dialogue"]},"moodle-core-notification-ajaxexception":{"requires":["moodle-core-notification-dialogue"]},"moodle-core-lockscroll":{"requires":["plugin","base-build"]},"moodle-core-formchangechecker":{"requires":["base","event-focus","moodle-core-event"]},"moodle-core-languninstallconfirm":{"requires":["base","node","moodle-core-notification-confirm","moodle-core-notification-alert"]},"moodle-core-popuphelp":{"requires":["moodle-core-tooltip"]},"moodle-core-blocks":{"requires":["base","node","io","dom","dd","dd-scroll","moodle-core-dragdrop","moodle-core-notification"]},"moodle-core-event":{"requires":["event-custom"]},"moodle-core-handlebars":{"condition":{"trigger":"handlebars","when":"after"}},"moodle-core_availability-form":{"requires":["base","node","event","event-delegate","panel","moodle-core-notification-dialogue","json"]},"moodle-backup-confirmcancel":{"requires":["node","node-event-simulate","moodle-core-notification-confirm"]},"moodle-backup-backupselectall":{"requires":["node","event","node-event-simulate","anim"]},"moodle-course-dragdrop":{"requires":["base","node","io","dom","dd","dd-scroll","moodle-core-dragdrop","moodle-core-notification","moodle-course-coursebase","moodle-course-util"]},"moodle-course-formatchooser":{"requires":["base","node","node-event-simulate"]},"moodle-course-modchooser":{"requires":["moodle-core-chooserdialogue","moodle-course-coursebase"]},"moodle-course-util":{"requires":["node"],"use":["moodle-course-util-base"],"submodules":{"moodle-course-util-base":{},"moodle-course-util-section":{"requires":["node","moodle-course-util-base"]},"moodle-course-util-cm":{"requires":["node","moodle-course-util-base"]}}},"moodle-course-categoryexpander":{"requires":["node","event-key"]},"moodle-course-management":{"requires":["base","node","io-base","moodle-core-notification-exception","json-parse","dd-constrain","dd-proxy","dd-drop","dd-delegate","node-event-delegate"]},"moodle-form-shortforms":{"requires":["node","base","selector-css3","moodle-core-event"]},"moodle-form-passwordunmask":{"requires":[]},"moodle-form-dateselector":{"requires":["base","node","overlay","calendar"]},"moodle-form-showadvanced":{"requires":["node","base","selector-css3"]},"moodle-question-chooser":{"requires":["moodle-core-chooserdialogue"]},"moodle-question-searchform":{"requires":["base","node"]},"moodle-question-qbankmanager":{"requires":["node","selector-css3"]},"moodle-question-preview":{"requires":["base","dom","event-delegate","event-key","core_question_engine"]},"moodle-availability_attempt-form":{"requires":["base","node","event","moodle-core_availability-form"]},"moodle-availability_completion-form":{"requires":["base","node","event","moodle-core_availability-form"]},"moodle-availability_date-form":{"requires":["base","node","event","io","moodle-core_availability-form"]},"moodle-availability_grade-form":{"requires":["base","node","event","moodle-core_availability-form"]},"moodle-availability_group-form":{"requires":["base","node","event","moodle-core_availability-form"]},"moodle-availability_grouping-form":{"requires":["base","node","event","moodle-core_availability-form"]},"moodle-availability_profile-form":{"requires":["base","node","event","moodle-core_availability-form"]},"moodle-mod_assign-history":{"requires":["node","transition"]},"moodle-mod_forum-subscriptiontoggle":{"requires":["base-base","io-base"]},"moodle-mod_quiz-repaginate":{"requires":["base","event","node","io","moodle-core-notification-dialogue"]},"moodle-mod_quiz-dragdrop":{"requires":["base","node","io","dom","dd","dd-scroll","moodle-core-dragdrop","moodle-core-notification","moodle-mod_quiz-quizbase","moodle-mod_quiz-util-base","moodle-mod_quiz-util-page","moodle-mod_quiz-util-slot","moodle-course-util"]},"moodle-mod_quiz-autosave":{"requires":["base","node","event","event-valuechange","node-event-delegate","io-form"]},"moodle-mod_quiz-quizbase":{"requires":["base","node"]},"moodle-mod_quiz-util":{"requires":["node","moodle-core-actionmenu"],"use":["moodle-mod_quiz-util-base"],"submodules":{"moodle-mod_quiz-util-base":{},"moodle-mod_quiz-util-slot":{"requires":["node","moodle-mod_quiz-util-base"]},"moodle-mod_quiz-util-page":{"requires":["node","moodle-mod_quiz-util-base"]}}},"moodle-mod_quiz-toolboxes":{"requires":["base","node","event","event-key","io","moodle-mod_quiz-quizbase","moodle-mod_quiz-util-slot","moodle-core-notification-ajaxexception"]},"moodle-mod_quiz-questionchooser":{"requires":["moodle-core-chooserdialogue","moodle-mod_quiz-util","querystring-parse"]},"moodle-mod_quiz-modform":{"requires":["base","node","event"]},"moodle-message_airnotifier-toolboxes":{"requires":["base","node","io"]},"moodle-filter_glossary-autolinker":{"requires":["base","node","io-base","json-parse","event-delegate","overlay","moodle-core-event","moodle-core-notification-alert","moodle-core-notification-exception","moodle-core-notification-ajaxexception"]},"moodle-filter_mathjaxloader-loader":{"requires":["moodle-core-event"]},"moodle-editor_atto-rangy":{"requires":[]},"moodle-editor_atto-editor":{"requires":["node","transition","io","overlay","escape","event","event-simulate","event-custom","node-event-html5","node-event-simulate","yui-throttle","moodle-core-notification-dialogue","moodle-core-notification-confirm","moodle-editor_atto-rangy","handlebars","timers","querystring-stringify"]},"moodle-editor_atto-plugin":{"requires":["node","base","escape","event","event-outside","handlebars","event-custom","timers","moodle-editor_atto-menu"]},"moodle-editor_atto-menu":{"requires":["moodle-core-notification-dialogue","node","event","event-custom"]},"moodle-report_eventlist-eventfilter":{"requires":["base","event","node","node-event-delegate","datatable","autocomplete","autocomplete-filters"]},"moodle-report_loglive-fetchlogs":{"requires":["base","event","node","io","node-event-delegate"]},"moodle-gradereport_grader-gradereporttable":{"requires":["base","node","event","handlebars","overlay","event-hover"]},"moodle-gradereport_history-userselector":{"requires":["escape","event-delegate","event-key","handlebars","io-base","json-parse","moodle-core-notification-dialogue"]},"moodle-tool_capability-search":{"requires":["base","node"]},"moodle-tool_lp-dragdrop-reorder":{"requires":["moodle-core-dragdrop"]},"moodle-tool_monitor-dropdown":{"requires":["base","event","node"]},"moodle-assignfeedback_editpdf-editor":{"requires":["base","event","node","io","graphics","json","event-move","event-resize","transition","querystring-stringify-simple","moodle-core-notification-dialog","moodle-core-notification-alert","moodle-core-notification-warning","moodle-core-notification-exception","moodle-core-notification-ajaxexception"]},"moodle-atto_accessibilitychecker-button":{"requires":["color-base","moodle-editor_atto-plugin"]},"moodle-atto_accessibilityhelper-button":{"requires":["moodle-editor_atto-plugin"]},"moodle-atto_align-button":{"requires":["moodle-editor_atto-plugin"]},"moodle-atto_bold-button":{"requires":["moodle-editor_atto-plugin"]},"moodle-atto_charmap-button":{"requires":["moodle-editor_atto-plugin"]},"moodle-atto_clear-button":{"requires":["moodle-editor_atto-plugin"]},"moodle-atto_collapse-button":{"requires":["moodle-editor_atto-plugin"]},"moodle-atto_emoticon-button":{"requires":["moodle-editor_atto-plugin"]},"moodle-atto_equation-button":{"requires":["moodle-editor_atto-plugin","moodle-core-event","io","event-valuechange","tabview","array-extras"]},"moodle-atto_html-beautify":{},"moodle-atto_html-button":{"requires":["promise","moodle-editor_atto-plugin","moodle-atto_html-beautify","moodle-atto_html-codemirror","event-valuechange"]},"moodle-atto_html-codemirror":{"requires":["moodle-atto_html-codemirror-skin"]},"moodle-atto_image-button":{"requires":["moodle-editor_atto-plugin"]},"moodle-atto_indent-button":{"requires":["moodle-editor_atto-plugin"]},"moodle-atto_italic-button":{"requires":["moodle-editor_atto-plugin"]},"moodle-atto_link-button":{"requires":["moodle-editor_atto-plugin"]},"moodle-atto_managefiles-usedfiles":{"requires":["node","escape"]},"moodle-atto_managefiles-button":{"requires":["moodle-editor_atto-plugin"]},"moodle-atto_media-button":{"requires":["moodle-editor_atto-plugin","moodle-form-shortforms"]},"moodle-atto_noautolink-button":{"requires":["moodle-editor_atto-plugin"]},"moodle-atto_orderedlist-button":{"requires":["moodle-editor_atto-plugin"]},"moodle-atto_panoptobutton-button":{"requires":["moodle-editor_atto-plugin"]},"moodle-atto_recordrtc-recording":{"requires":["moodle-atto_recordrtc-button"]},"moodle-atto_recordrtc-button":{"requires":["moodle-editor_atto-plugin","moodle-atto_recordrtc-recording"]},"moodle-atto_rtl-button":{"requires":["moodle-editor_atto-plugin"]},"moodle-atto_strike-button":{"requires":["moodle-editor_atto-plugin"]},"moodle-atto_subscript-button":{"requires":["moodle-editor_atto-plugin"]},"moodle-atto_superscript-button":{"requires":["moodle-editor_atto-plugin"]},"moodle-atto_table-button":{"requires":["moodle-editor_atto-plugin","moodle-editor_atto-menu","event","event-valuechange"]},"moodle-atto_title-button":{"requires":["moodle-editor_atto-plugin"]},"moodle-atto_underline-button":{"requires":["moodle-editor_atto-plugin"]},"moodle-atto_undo-button":{"requires":["moodle-editor_atto-plugin"]},"moodle-atto_unorderedlist-button":{"requires":["moodle-editor_atto-plugin"]}}},"gallery":{"name":"gallery","base":"https:\/\/learning.stanford.edu\/online\/lib\/yuilib\/gallery\/","combine":true,"comboBase":"https:\/\/learning.stanford.edu\/online\/theme\/yui_combo.php?","ext":false,"root":"gallery\/1584077912\/","patterns":{"gallery-":{"group":"gallery"}}}},"modules":{"core_filepicker":{"name":"core_filepicker","fullpath":"https:\/\/learning.stanford.edu\/online\/lib\/javascript.php\/1584077912\/repository\/filepicker.js","requires":["base","node","node-event-simulate","json","async-queue","io-base","io-upload-iframe","io-form","yui2-treeview","panel","cookie","datatable","datatable-sort","resize-plugin","dd-plugin","escape","moodle-core_filepicker","moodle-core-notification-dialogue"]},"core_comment":{"name":"core_comment","fullpath":"https:\/\/learning.stanford.edu\/online\/lib\/javascript.php\/1584077912\/comment\/comment.js","requires":["base","io-base","node","json","yui2-animation","overlay","escape"]},"mathjax":{"name":"mathjax","fullpath":"https:\/\/cdnjs.cloudflare.com\/ajax\/libs\/mathjax\/2.7.2\/MathJax.js?delayStartupUntil=configured"}}};
+M.yui.loader = {modules: {}};
+
+//]]>
+</script>
+    <meta name="viewport" content="user-scalable=yes, initial-scale=1.0, maximum-scale=2.0, width=device-width">
+<script type="text/x-mathjax-config;executed=true">
+MathJax.Hub.Config({
+    config: ["Accessible.js", "Safe.js"],
+    errorSettings: { message: ["!"] },
+    skipStartupTypeset: true,
+    messageStyle: "none"
+});
+</script><style type="text/css">.backpack.dropzone {
+  font-family: 'SF UI Display', 'Segoe UI';
+  font-size: 15px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 250px;
+  height: 150px;
+  font-weight: lighter;
+  color: white;
+  will-change: right;
+  z-index: 2147483647;
+  bottom: 20%;
+  background: #333;
+  position: fixed;
+  user-select: none;
+  transition: left .5s, right .5s;
+  right: 0px; }
+  .backpack.dropzone .animation {
+    height: 80px;
+    width: 250px;
+    background: url("chrome-extension://lifbcibllhkdhoafpjfnlhfpfgnpldfl/assets/backpack/dropzone/hoverstate.png") left center; }
+  .backpack.dropzone .title::before {
+    content: 'Save to'; }
+  .backpack.dropzone.closed {
+    right: -250px; }
+  .backpack.dropzone.hover .animation {
+    animation: sxt-play-anim-hover 0.91s steps(21);
+    animation-fill-mode: forwards;
+    background: url("chrome-extension://lifbcibllhkdhoafpjfnlhfpfgnpldfl/assets/backpack/dropzone/hoverstate.png") left center; }
+
+@keyframes sxt-play-anim-hover {
+  from {
+    background-position: 0px; }
+  to {
+    background-position: -5250px; } }
+  .backpack.dropzone.saving .title::before {
+    content: 'Saving to'; }
+  .backpack.dropzone.saving .animation {
+    background: url("chrome-extension://lifbcibllhkdhoafpjfnlhfpfgnpldfl/assets/backpack/dropzone/saving_loop.png") left center;
+    animation: sxt-play-anim-saving steps(59) 2.46s infinite; }
+
+@keyframes sxt-play-anim-saving {
+  100% {
+    background-position: -14750px; } }
+  .backpack.dropzone.saved .title::before {
+    content: 'Saved to'; }
+  .backpack.dropzone.saved .animation {
+    background: url("chrome-extension://lifbcibllhkdhoafpjfnlhfpfgnpldfl/assets/backpack/dropzone/saved.png") left center;
+    animation: sxt-play-anim-saved steps(20) 0.83s forwards; }
+
+@keyframes sxt-play-anim-saved {
+  100% {
+    background-position: -5000px; } }
+</style><script type="text/javascript" charset="utf-8" async="" data-requirecontext="_" data-requiremodule="core/first" src="./XCS224U-C001_ Assignment 3 Word-level Entailment with Neural Networks_files/requirejs.php"></script><script type="text/javascript" charset="utf-8" async="" data-requirecontext="_" data-requiremodule="jquery" src="./XCS224U-C001_ Assignment 3 Word-level Entailment with Neural Networks_files/javascript.php"></script><style type="text/css">.MathJax_Hover_Frame {border-radius: .25em; -webkit-border-radius: .25em; -moz-border-radius: .25em; -khtml-border-radius: .25em; box-shadow: 0px 0px 15px #83A; -webkit-box-shadow: 0px 0px 15px #83A; -moz-box-shadow: 0px 0px 15px #83A; -khtml-box-shadow: 0px 0px 15px #83A; border: 1px solid #A6D ! important; display: inline-block; position: absolute}
+.MathJax_Menu_Button .MathJax_Hover_Arrow {position: absolute; cursor: pointer; display: inline-block; border: 2px solid #AAA; border-radius: 4px; -webkit-border-radius: 4px; -moz-border-radius: 4px; -khtml-border-radius: 4px; font-family: 'Courier New',Courier; font-size: 9px; color: #F0F0F0}
+.MathJax_Menu_Button .MathJax_Hover_Arrow span {display: block; background-color: #AAA; border: 1px solid; border-radius: 3px; line-height: 0; padding: 4px}
+.MathJax_Hover_Arrow:hover {color: white!important; border: 2px solid #CCC!important}
+.MathJax_Hover_Arrow:hover span {background-color: #CCC!important}
+</style><style type="text/css">#MathJax_About {position: fixed; left: 50%; width: auto; text-align: center; border: 3px outset; padding: 1em 2em; background-color: #DDDDDD; color: black; cursor: default; font-family: message-box; font-size: 120%; font-style: normal; text-indent: 0; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; z-index: 201; border-radius: 15px; -webkit-border-radius: 15px; -moz-border-radius: 15px; -khtml-border-radius: 15px; box-shadow: 0px 10px 20px #808080; -webkit-box-shadow: 0px 10px 20px #808080; -moz-box-shadow: 0px 10px 20px #808080; -khtml-box-shadow: 0px 10px 20px #808080; filter: progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')}
+#MathJax_About.MathJax_MousePost {outline: none}
+.MathJax_Menu {position: absolute; background-color: white; color: black; width: auto; padding: 5px 0px; border: 1px solid #CCCCCC; margin: 0; cursor: default; font: menu; text-align: left; text-indent: 0; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; z-index: 201; border-radius: 5px; -webkit-border-radius: 5px; -moz-border-radius: 5px; -khtml-border-radius: 5px; box-shadow: 0px 10px 20px #808080; -webkit-box-shadow: 0px 10px 20px #808080; -moz-box-shadow: 0px 10px 20px #808080; -khtml-box-shadow: 0px 10px 20px #808080; filter: progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')}
+.MathJax_MenuItem {padding: 1px 2em; background: transparent}
+.MathJax_MenuArrow {position: absolute; right: .5em; padding-top: .25em; color: #666666; font-size: .75em}
+.MathJax_MenuActive .MathJax_MenuArrow {color: white}
+.MathJax_MenuArrow.RTL {left: .5em; right: auto}
+.MathJax_MenuCheck {position: absolute; left: .7em}
+.MathJax_MenuCheck.RTL {right: .7em; left: auto}
+.MathJax_MenuRadioCheck {position: absolute; left: .7em}
+.MathJax_MenuRadioCheck.RTL {right: .7em; left: auto}
+.MathJax_MenuLabel {padding: 1px 2em 3px 1.33em; font-style: italic}
+.MathJax_MenuRule {border-top: 1px solid #DDDDDD; margin: 4px 3px}
+.MathJax_MenuDisabled {color: GrayText}
+.MathJax_MenuActive {background-color: #606872; color: white}
+.MathJax_MenuDisabled:focus, .MathJax_MenuLabel:focus {background-color: #E8E8E8}
+.MathJax_ContextMenu:focus {outline: none}
+.MathJax_ContextMenu .MathJax_MenuItem:focus {outline: none}
+#MathJax_AboutClose {top: .2em; right: .2em}
+.MathJax_Menu .MathJax_MenuClose {top: -10px; left: -10px}
+.MathJax_MenuClose {position: absolute; cursor: pointer; display: inline-block; border: 2px solid #AAA; border-radius: 18px; -webkit-border-radius: 18px; -moz-border-radius: 18px; -khtml-border-radius: 18px; font-family: 'Courier New',Courier; font-size: 24px; color: #F0F0F0}
+.MathJax_MenuClose span {display: block; background-color: #AAA; border: 1.5px solid; border-radius: 18px; -webkit-border-radius: 18px; -moz-border-radius: 18px; -khtml-border-radius: 18px; line-height: 0; padding: 8px 0 6px}
+.MathJax_MenuClose:hover {color: white!important; border: 2px solid #CCC!important}
+.MathJax_MenuClose:hover span {background-color: #CCC!important}
+.MathJax_MenuClose:hover:focus {outline: none}
+</style><style type="text/css">.MathJax_Preview .MJXf-math {color: inherit!important}
+</style><style type="text/css">.MJX_Assistive_MathML {position: absolute!important; top: 0; left: 0; clip: rect(1px, 1px, 1px, 1px); padding: 1px 0 0 0!important; border: 0!important; height: 1px!important; width: 1px!important; overflow: hidden!important; display: block!important; -webkit-touch-callout: none; -webkit-user-select: none; -khtml-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none}
+.MJX_Assistive_MathML.MJX_Assistive_MathML_Block {width: 100%!important}
+</style><style type="text/css">#MathJax_Zoom {position: absolute; background-color: #F0F0F0; overflow: auto; display: block; z-index: 301; padding: .5em; border: 1px solid black; margin: 0; font-weight: normal; font-style: normal; text-align: left; text-indent: 0; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; -webkit-box-sizing: content-box; -moz-box-sizing: content-box; box-sizing: content-box; box-shadow: 5px 5px 15px #AAAAAA; -webkit-box-shadow: 5px 5px 15px #AAAAAA; -moz-box-shadow: 5px 5px 15px #AAAAAA; -khtml-box-shadow: 5px 5px 15px #AAAAAA; filter: progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')}
+#MathJax_ZoomOverlay {position: absolute; left: 0; top: 0; z-index: 300; display: inline-block; width: 100%; height: 100%; border: 0; padding: 0; margin: 0; background-color: white; opacity: 0; filter: alpha(opacity=0)}
+#MathJax_ZoomFrame {position: relative; display: inline-block; height: 0; width: 0}
+#MathJax_ZoomEventTrap {position: absolute; left: 0; top: 0; z-index: 302; display: inline-block; border: 0; padding: 0; margin: 0; background-color: white; opacity: 0; filter: alpha(opacity=0)}
+</style><style type="text/css">.MathJax_Preview {color: #888}
+#MathJax_Message {position: fixed; left: 1em; bottom: 1.5em; background-color: #E6E6E6; border: 1px solid #959595; margin: 0px; padding: 2px 8px; z-index: 102; color: black; font-size: 80%; width: auto; white-space: nowrap}
+#MathJax_MSIE_Frame {position: absolute; top: 0; left: 0; width: 0px; z-index: 101; border: 0px; margin: 0px; padding: 0px}
+.MathJax_Error {color: #CC0000; font-style: italic}
+</style><style type="text/css">.MJXp-script {font-size: .8em}
+.MJXp-right {-webkit-transform-origin: right; -moz-transform-origin: right; -ms-transform-origin: right; -o-transform-origin: right; transform-origin: right}
+.MJXp-bold {font-weight: bold}
+.MJXp-italic {font-style: italic}
+.MJXp-scr {font-family: MathJax_Script,'Times New Roman',Times,STIXGeneral,serif}
+.MJXp-frak {font-family: MathJax_Fraktur,'Times New Roman',Times,STIXGeneral,serif}
+.MJXp-sf {font-family: MathJax_SansSerif,'Times New Roman',Times,STIXGeneral,serif}
+.MJXp-cal {font-family: MathJax_Caligraphic,'Times New Roman',Times,STIXGeneral,serif}
+.MJXp-mono {font-family: MathJax_Typewriter,'Times New Roman',Times,STIXGeneral,serif}
+.MJXp-largeop {font-size: 150%}
+.MJXp-largeop.MJXp-int {vertical-align: -.2em}
+.MJXp-math {display: inline-block; line-height: 1.2; text-indent: 0; font-family: 'Times New Roman',Times,STIXGeneral,serif; white-space: nowrap; border-collapse: collapse}
+.MJXp-display {display: block; text-align: center; margin: 1em 0}
+.MJXp-math span {display: inline-block}
+.MJXp-box {display: block!important; text-align: center}
+.MJXp-box:after {content: " "}
+.MJXp-rule {display: block!important; margin-top: .1em}
+.MJXp-char {display: block!important}
+.MJXp-mo {margin: 0 .15em}
+.MJXp-mfrac {margin: 0 .125em; vertical-align: .25em}
+.MJXp-denom {display: inline-table!important; width: 100%}
+.MJXp-denom > * {display: table-row!important}
+.MJXp-surd {vertical-align: top}
+.MJXp-surd > * {display: block!important}
+.MJXp-script-box > *  {display: table!important; height: 50%}
+.MJXp-script-box > * > * {display: table-cell!important; vertical-align: top}
+.MJXp-script-box > *:last-child > * {vertical-align: bottom}
+.MJXp-script-box > * > * > * {display: block!important}
+.MJXp-mphantom {visibility: hidden}
+.MJXp-munderover {display: inline-table!important}
+.MJXp-over {display: inline-block!important; text-align: center}
+.MJXp-over > * {display: block!important}
+.MJXp-munderover > * {display: table-row!important}
+.MJXp-mtable {vertical-align: .25em; margin: 0 .125em}
+.MJXp-mtable > * {display: inline-table!important; vertical-align: middle}
+.MJXp-mtr {display: table-row!important}
+.MJXp-mtd {display: table-cell!important; text-align: center; padding: .5em 0 0 .5em}
+.MJXp-mtr > .MJXp-mtd:first-child {padding-left: 0}
+.MJXp-mtr:first-child > .MJXp-mtd {padding-top: 0}
+.MJXp-mlabeledtr {display: table-row!important}
+.MJXp-mlabeledtr > .MJXp-mtd:first-child {padding-left: 0}
+.MJXp-mlabeledtr:first-child > .MJXp-mtd {padding-top: 0}
+.MJXp-merror {background-color: #FFFF88; color: #CC0000; border: 1px solid #CC0000; padding: 1px 3px; font-style: normal; font-size: 90%}
+.MJXp-scale0 {-webkit-transform: scaleX(.0); -moz-transform: scaleX(.0); -ms-transform: scaleX(.0); -o-transform: scaleX(.0); transform: scaleX(.0)}
+.MJXp-scale1 {-webkit-transform: scaleX(.1); -moz-transform: scaleX(.1); -ms-transform: scaleX(.1); -o-transform: scaleX(.1); transform: scaleX(.1)}
+.MJXp-scale2 {-webkit-transform: scaleX(.2); -moz-transform: scaleX(.2); -ms-transform: scaleX(.2); -o-transform: scaleX(.2); transform: scaleX(.2)}
+.MJXp-scale3 {-webkit-transform: scaleX(.3); -moz-transform: scaleX(.3); -ms-transform: scaleX(.3); -o-transform: scaleX(.3); transform: scaleX(.3)}
+.MJXp-scale4 {-webkit-transform: scaleX(.4); -moz-transform: scaleX(.4); -ms-transform: scaleX(.4); -o-transform: scaleX(.4); transform: scaleX(.4)}
+.MJXp-scale5 {-webkit-transform: scaleX(.5); -moz-transform: scaleX(.5); -ms-transform: scaleX(.5); -o-transform: scaleX(.5); transform: scaleX(.5)}
+.MJXp-scale6 {-webkit-transform: scaleX(.6); -moz-transform: scaleX(.6); -ms-transform: scaleX(.6); -o-transform: scaleX(.6); transform: scaleX(.6)}
+.MJXp-scale7 {-webkit-transform: scaleX(.7); -moz-transform: scaleX(.7); -ms-transform: scaleX(.7); -o-transform: scaleX(.7); transform: scaleX(.7)}
+.MJXp-scale8 {-webkit-transform: scaleX(.8); -moz-transform: scaleX(.8); -ms-transform: scaleX(.8); -o-transform: scaleX(.8); transform: scaleX(.8)}
+.MJXp-scale9 {-webkit-transform: scaleX(.9); -moz-transform: scaleX(.9); -ms-transform: scaleX(.9); -o-transform: scaleX(.9); transform: scaleX(.9)}
+.MathJax_PHTML .noError {vertical-align: ; font-size: 90%; text-align: left; color: black; padding: 1px 3px; border: 1px solid}
+</style><style type="text/css">.MathJax_Display {text-align: center; margin: 1em 0em; position: relative; display: block!important; text-indent: 0; max-width: none; max-height: none; min-width: 0; min-height: 0; width: 100%}
+.MathJax .merror {background-color: #FFFF88; color: #CC0000; border: 1px solid #CC0000; padding: 1px 3px; font-style: normal; font-size: 90%}
+.MathJax .MJX-monospace {font-family: monospace}
+.MathJax .MJX-sans-serif {font-family: sans-serif}
+#MathJax_Tooltip {background-color: InfoBackground; color: InfoText; border: 1px solid black; box-shadow: 2px 2px 5px #AAAAAA; -webkit-box-shadow: 2px 2px 5px #AAAAAA; -moz-box-shadow: 2px 2px 5px #AAAAAA; -khtml-box-shadow: 2px 2px 5px #AAAAAA; filter: progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true'); padding: 3px 4px; z-index: 401; position: absolute; left: 0; top: 0; width: auto; height: auto; display: none}
+.MathJax {display: inline; font-style: normal; font-weight: normal; line-height: normal; font-size: 100%; font-size-adjust: none; text-indent: 0; text-align: left; text-transform: none; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; direction: ltr; max-width: none; max-height: none; min-width: 0; min-height: 0; border: 0; padding: 0; margin: 0}
+.MathJax:focus, body :focus .MathJax {display: inline-table}
+.MathJax.MathJax_FullWidth {text-align: center; display: table-cell!important; width: 10000em!important}
+.MathJax img, .MathJax nobr, .MathJax a {border: 0; padding: 0; margin: 0; max-width: none; max-height: none; min-width: 0; min-height: 0; vertical-align: 0; line-height: normal; text-decoration: none}
+img.MathJax_strut {border: 0!important; padding: 0!important; margin: 0!important; vertical-align: 0!important}
+.MathJax span {display: inline; position: static; border: 0; padding: 0; margin: 0; vertical-align: 0; line-height: normal; text-decoration: none}
+.MathJax nobr {white-space: nowrap!important}
+.MathJax img {display: inline!important; float: none!important}
+.MathJax * {transition: none; -webkit-transition: none; -moz-transition: none; -ms-transition: none; -o-transition: none}
+.MathJax_Processing {visibility: hidden; position: fixed; width: 0; height: 0; overflow: hidden}
+.MathJax_Processed {display: none!important}
+.MathJax_ExBox {display: block!important; overflow: hidden; width: 1px; height: 60ex; min-height: 0; max-height: none}
+.MathJax .MathJax_EmBox {display: block!important; overflow: hidden; width: 1px; height: 60em; min-height: 0; max-height: none}
+.MathJax_LineBox {display: table!important}
+.MathJax_LineBox span {display: table-cell!important; width: 10000em!important; min-width: 0; max-width: none; padding: 0; border: 0; margin: 0}
+.MathJax .MathJax_HitBox {cursor: text; background: white; opacity: 0; filter: alpha(opacity=0)}
+.MathJax .MathJax_HitBox * {filter: none; opacity: 1; background: transparent}
+#MathJax_Tooltip * {filter: none; opacity: 1; background: transparent}
+@font-face {font-family: MathJax_Blank; src: url('about:blank')}
+.MathJax .noError {vertical-align: ; font-size: 90%; text-align: left; color: black; padding: 1px 3px; border: 1px solid}
+</style></head>
+
+<body id="page-mod-page-view" class="format-topics  path-mod path-mod-page chrome dir-ltr lang-en yui-skin-sam yui3-skin-sam learning-stanford-edu--online pagelayout-incourse course-607 context-92063 cmid-19501 category-106 has-region-side-pre used-region-side-pre has-region-side-post used-region-side-post jsenabled" style=""><div style="visibility: hidden; overflow: hidden; position: absolute; top: 0px; height: 1px; width: auto; padding: 0px; border: 0px; margin: 0px; text-align: left; text-indent: 0px; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal;"><div id="MathJax_Hidden"></div></div><div id="MathJax_Message" style="display: none;"></div>
+<script>
+    (function (i, s, o, g, r, a, m) {
+        i['GoogleAnalyticsObject'] = r;
+        i[r] = i[r] || function () {
+            (i[r].q = i[r].q || []).push(arguments)
+        }, i[r].l = 1 * new Date();
+        a = s.createElement(o),
+                m = s.getElementsByTagName(o)[0];
+        a.async = 1;
+        a.src = g;
+        m.parentNode.insertBefore(a, m)
+    })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+    ga('create', 'UA-48050801-1', 'auto');
+    ga('send', 'pageview');
+</script><div class="skiplinks">
+    <a href="https://learning.stanford.edu/online/mod/page/view.php?id=19501&amp;program=scpd#maincontent" class="skip">Skip to main content</a>
+</div><script type="text/javascript" src="./XCS224U-C001_ Assignment 3 Word-level Entailment with Neural Networks_files/combo(6)"></script><div id="yui3-css-stamp" style="position: absolute !important; visibility: hidden !important" class=""></div><script type="text/javascript" src="./XCS224U-C001_ Assignment 3 Word-level Entailment with Neural Networks_files/javascript(1).php"></script>
+<script type="text/javascript" src="./XCS224U-C001_ Assignment 3 Word-level Entailment with Neural Networks_files/javascript(2).php"></script>
+<script type="text/javascript">
+//<![CDATA[
+document.body.className += ' jsenabled';
+//]]>
+</script>
+
+
+<header role="banner" class="navbar navbar-fixed-top moodle-has-zindex">
+    <nav role="navigation" class="navbar-inner">
+        <div class="container-fluid">
+            <div class="headermain scpd">
+                <a href="http://www.stanford.edu/"><img src="./XCS224U-C001_ Assignment 3 Word-level Entailment with Neural Networks_files/brandbar-stanford-logo@2x.png" width="153" height="22" alt="Stanford University"></a>
+                <h1 class="">
+                                        <a id="programe_logo" class="scpd" href="https://scpd.stanford.edu/"><div id="title_up"></div><div id="title_down"></div><div id="program_logo-img"></div></a>
+                </h1>
+            </div>
+            <!-- <a class="brand" href="https://learning.stanford.edu/online">Learning</a> -->
+            <a class="btn btn-navbar" data-toggle="workaround-collapse" data-target=".nav-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </a>
+            <div class="nav-collapse collapse">
+                                <ul class="nav pull-right">
+                    <li></li>
+                    <li class="navbar-text"><div class="usermenu"><div class="moodle-actionmenu nowrap-items" id="action-menu-0" data-enhance="moodle-core-actionmenu" data-enhanced="1">
+
+        <ul class="menubar" id="action-menu-0-menubar" role="menubar">
+
+            <!--
+
+            --><!--
+
+            --><li role="presentation"><a href="https://learning.stanford.edu/online/mod/page/view.php?id=19501&amp;program=scpd#" class=" toggle-display textmenu" id="action-menu-toggle-0" title="User menu" role="menuitem" aria-haspopup="true"><span class="userbutton"><span class="usertext mr-1">Wei Wu</span><span class="avatars"><span class="avatar current"><img src="./XCS224U-C001_ Assignment 3 Word-level Entailment with Neural Networks_files/f2.png" class="userpicture defaultuserpic" width="35" height="35" role="presentation" aria-hidden="true"></span></span></span><b class="caret"></b></a>
+</li>
+
+        </ul>
+
+
+        <ul class="menu  align-tr-br" id="action-menu-0-menu" data-rel="menu-content" aria-labelledby="action-menu-toggle-0" role="menu" data-align="tr-br" aria-hidden="true">
+            <li role="presentation">    <a href="https://learning.stanford.edu/online/user/edit.php" class="icon menu-action" role="menuitem" data-title="Edit-Profile" aria-labelledby="actionmenuaction-1"><img class="icon " alt="" aria-hidden="true" src="./XCS224U-C001_ Assignment 3 Word-level Entailment with Neural Networks_files/edit.svg"><span class="menu-action-text" id="actionmenuaction-1">Edit Profile</span></a>
+
+
+
+
+
+</li><li role="presentation">
+<span class="filler">&nbsp;</span>
+
+
+
+</li><li role="presentation">    <a href="https://learning.stanford.edu/online/login/logout.php?sesskey=H8vsmaAx5N" class="icon menu-action" role="menuitem" data-title="logout,moodle" aria-labelledby="actionmenuaction-2"><img class="icon " alt="" aria-hidden="true" src="./XCS224U-C001_ Assignment 3 Word-level Entailment with Neural Networks_files/logout.svg"><span class="menu-action-text" id="actionmenuaction-2">Exit</span></a>
+
+
+
+
+
+</li>
+        </ul>
+</div></div></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</header>
+
+<div id="page" class="container-fluid">
+
+    <header id="page-header" class="clearfix">
+        
+<!--div class="alert alert-info">
+<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+<b>System Maintenance</b>: We are working on our website to improve your online experience, please plan accordingly. On <b>Saturday, January 18th from 1:00 am – 7:00 am PST</b> there will be limited access to course final exams and evaluations during this scheduled maintenance period.  If you have any questions please contact our customer service team at <a href="mailto:scpd-information@stanford.edu">scpd-information@stanford.edu</a>. Thank you for your patience.
+</div>
+<--
+
+<!--
+<div class="alert alert-warning">
+<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+<b>Maintenance Alert</b>:  Final Exam and Course Evaluation access is down at this time.  We are aware of the issue and working to get this corrected as quickly as possible.  We apologize for the inconvenience.
+</div>
+--> 
+        <div id="page-navbar" class="clearfix">
+
+            
+            <nav class="breadcrumb-nav"><span class="accesshide">Page path</span><ul role="navigation" id="crumbnav" class="breadcrumb"><li class="breadcrumb-item" id="breadcrumb-0"><a href="javascript:void(0);">Home</a></li><li class="breadcrumb-item" id="breadcrumb-2"> <span class="accesshide "><span class="arrow_text">/</span>&nbsp;</span><span class="arrow sep">▶︎</span> <span itemscope="" itemtype="http://data-vocabulary.org/Breadcrumb"><a itemprop="url" title="Natural Language Understanding Cohort 1" href="https://learning.stanford.edu/online/course/view.php?id=607"><span itemprop="title">XCS224U-C001</span></a></span></li><li class="breadcrumb-item" id="breadcrumb-3"> <span class="accesshide "><span class="arrow_text">/</span>&nbsp;</span><span class="arrow sep">▶︎</span> <span itemscope="" itemtype="http://data-vocabulary.org/Breadcrumb"><a itemprop="url" title="Page" aria-current="page" href="https://learning.stanford.edu/online/mod/page/view.php?id=19501"><span itemprop="title">Assignment 3 Word-level Entailment with Neural Networks</span></a></span></li></ul><ul id="dropdown-course-set"><li class="breadcrumb-item" id="breadcrumb-0"><a href="https://learning.stanford.edu/online/course/view.php?id=607&amp;program=scpd">Natural Language Understanding Cohort 1</a></li></ul></nav>
+            <div class="breadcrumb-button"></div>
+        </div>
+        <h1>Natural Language Understanding Cohort 1</h1>        <div id="course-header">
+                    </div>
+    </header>
+
+    <div id="page-content" class="row-fluid contentnoteditable">
+        <div id="region-bs-main-and-pre" class="span10">
+            <div class="row-fluid">
+                <section id="region-main" class="span10 pull-right"><span class="notifications" id="user-notifications"></span><div role="main"><span id="maincontent"></span><div class="box generalbox center clearfix"><div class="no-overflow"><span class="filter_mathjaxloader_equation"><div id="intro">
+    <h2>Assignment 3 Word-level Entailment with Neural Networks</h2>
+    <h2 style="font-size:1.5em;">HW due Sunday, March 22 at 11:59pm PT<br>Bake-off due Sunday, March 29 at 11:59pm PT</h2>
+
+    <center><img src="./XCS224U-C001_ Assignment 3 Word-level Entailment with Neural Networks_files/MoodleHeader.jpg" alt="" width="1500" height="228" role="presentation" class="img-responsive atto_image_button_text-bottom"></center>
+</div>
+
+
+
+<h2>Overview</h2>
+
+<p><b><a href="https://nbviewer.jupyter.org/github/cgpotts/cs224u/blob/master/hw_wordentail.ipynb" target="_blank">Assignment 3 and Bake-off Notebook</a></b></p>
+
+<p>The general problem is word-level natural language inference.</p>
+
+<p>Training examples are pairs of words <span class="nolink"><span class="MathJax_Preview" style="color: inherit; display: none;"></span><span class="MathJax" id="MathJax-Element-1-Frame" tabindex="0" data-mathml="&lt;math xmlns=&quot;http://www.w3.org/1998/Math/MathML&quot;&gt;&lt;mo stretchy=&quot;false&quot;&gt;(&lt;/mo&gt;&lt;msub&gt;&lt;mi&gt;w&lt;/mi&gt;&lt;mrow class=&quot;MJX-TeXAtom-ORD&quot;&gt;&lt;mi&gt;L&lt;/mi&gt;&lt;/mrow&gt;&lt;/msub&gt;&lt;mo&gt;,&lt;/mo&gt;&lt;msub&gt;&lt;mi&gt;w&lt;/mi&gt;&lt;mrow class=&quot;MJX-TeXAtom-ORD&quot;&gt;&lt;mi&gt;R&lt;/mi&gt;&lt;/mrow&gt;&lt;/msub&gt;&lt;mo stretchy=&quot;false&quot;&gt;)&lt;/mo&gt;&lt;mo&gt;,&lt;/mo&gt;&lt;mi&gt;y&lt;/mi&gt;&lt;/math&gt;" role="presentation" style="position: relative;"><nobr aria-hidden="true"><span class="math" id="MathJax-Span-1" style="width: 4.786em; display: inline-block;"><span style="display: inline-block; position: relative; width: 4.276em; height: 0px; font-size: 112%;"><span style="position: absolute; clip: rect(1.661em, 1004.28em, 2.937em, -999.997em); top: -2.548em; left: 0em;"><span class="mrow" id="MathJax-Span-2"><span class="mo" id="MathJax-Span-3" style="font-family: STIXGeneral-Regular;">(</span><span class="msubsup" id="MathJax-Span-4"><span style="display: inline-block; position: relative; width: 1.151em; height: 0px;"><span style="position: absolute; clip: rect(3.383em, 1000.64em, 4.212em, -999.997em); top: -4.015em; left: 0em;"><span class="mi" id="MathJax-Span-5" style="font-family: STIXGeneral-Italic;">w</span><span style="display: inline-block; width: 0px; height: 4.021em;"></span></span><span style="position: absolute; top: -3.887em; left: 0.641em;"><span class="texatom" id="MathJax-Span-6"><span class="mrow" id="MathJax-Span-7"><span class="mi" id="MathJax-Span-8" style="font-size: 70.7%; font-family: STIXGeneral-Italic;">L<span style="display: inline-block; overflow: hidden; height: 1px; width: 0.003em;"></span></span></span></span><span style="display: inline-block; width: 0px; height: 4.021em;"></span></span></span></span><span class="mo" id="MathJax-Span-9" style="font-family: STIXGeneral-Regular;">,</span><span class="msubsup" id="MathJax-Span-10" style="padding-left: 0.195em;"><span style="display: inline-block; position: relative; width: 1.151em; height: 0px;"><span style="position: absolute; clip: rect(3.383em, 1000.64em, 4.212em, -999.997em); top: -4.015em; left: 0em;"><span class="mi" id="MathJax-Span-11" style="font-family: STIXGeneral-Italic;">w</span><span style="display: inline-block; width: 0px; height: 4.021em;"></span></span><span style="position: absolute; top: -3.887em; left: 0.641em;"><span class="texatom" id="MathJax-Span-12"><span class="mrow" id="MathJax-Span-13"><span class="mi" id="MathJax-Span-14" style="font-size: 70.7%; font-family: STIXGeneral-Italic;">R</span></span></span><span style="display: inline-block; width: 0px; height: 4.021em;"></span></span></span></span><span class="mo" id="MathJax-Span-15" style="font-family: STIXGeneral-Regular;">)</span><span class="mo" id="MathJax-Span-16" style="font-family: STIXGeneral-Regular;">,</span><span class="mi" id="MathJax-Span-17" style="font-family: STIXGeneral-Italic; padding-left: 0.195em;">y</span></span><span style="display: inline-block; width: 0px; height: 2.554em;"></span></span></span><span style="display: inline-block; overflow: hidden; vertical-align: -0.282em; border-left: 0px solid; width: 0px; height: 1.146em;"></span></span></nobr><span class="MJX_Assistive_MathML" role="presentation"><math xmlns="http://www.w3.org/1998/Math/MathML"><mo stretchy="false">(</mo><msub><mi>w</mi><mrow class="MJX-TeXAtom-ORD"><mi>L</mi></mrow></msub><mo>,</mo><msub><mi>w</mi><mrow class="MJX-TeXAtom-ORD"><mi>R</mi></mrow></msub><mo stretchy="false">)</mo><mo>,</mo><mi>y</mi></math></span></span><script type="math/tex" id="MathJax-Element-1"> (w_{L}, w_{R}), y </script></span> with <span class="nolink"><span class="MathJax_Preview" style="color: inherit; display: none;"></span><span class="MathJax" id="MathJax-Element-2-Frame" tabindex="0" data-mathml="&lt;math xmlns=&quot;http://www.w3.org/1998/Math/MathML&quot;&gt;&lt;mi&gt;y&lt;/mi&gt;&lt;mo&gt;=&lt;/mo&gt;&lt;mn&gt;1&lt;/mn&gt;&lt;/math&gt;" role="presentation" style="position: relative;"><nobr aria-hidden="true"><span class="math" id="MathJax-Span-18" style="width: 2.618em; display: inline-block;"><span style="display: inline-block; position: relative; width: 2.299em; height: 0px; font-size: 112%;"><span style="position: absolute; clip: rect(1.661em, 1002.17em, 2.937em, -999.997em); top: -2.548em; left: 0em;"><span class="mrow" id="MathJax-Span-19"><span class="mi" id="MathJax-Span-20" style="font-family: STIXGeneral-Italic;">y</span><span class="mo" id="MathJax-Span-21" style="font-family: STIXGeneral-Regular; padding-left: 0.322em;">=</span><span class="mn" id="MathJax-Span-22" style="font-family: STIXGeneral-Regular; padding-left: 0.322em;">1</span></span><span style="display: inline-block; width: 0px; height: 2.554em;"></span></span></span><span style="display: inline-block; overflow: hidden; vertical-align: -0.282em; border-left: 0px solid; width: 0px; height: 1.146em;"></span></span></nobr><span class="MJX_Assistive_MathML" role="presentation"><math xmlns="http://www.w3.org/1998/Math/MathML"><mi>y</mi><mo>=</mo><mn>1</mn></math></span></span><script type="math/tex" id="MathJax-Element-2"> y = 1 </script></span> if <span class="nolink"><span class="MathJax_Preview" style="color: inherit; display: none;"></span><span class="MathJax" id="MathJax-Element-3-Frame" tabindex="0" data-mathml="&lt;math xmlns=&quot;http://www.w3.org/1998/Math/MathML&quot;&gt;&lt;msub&gt;&lt;mi&gt;w&lt;/mi&gt;&lt;mrow class=&quot;MJX-TeXAtom-ORD&quot;&gt;&lt;mi&gt;L&lt;/mi&gt;&lt;/mrow&gt;&lt;/msub&gt;&lt;/math&gt;" role="presentation" style="position: relative;"><nobr aria-hidden="true"><span class="math" id="MathJax-Span-23" style="width: 1.279em; display: inline-block;"><span style="display: inline-block; position: relative; width: 1.151em; height: 0px; font-size: 112%;"><span style="position: absolute; clip: rect(1.598em, 1001.15em, 2.554em, -999.997em); top: -2.229em; left: 0em;"><span class="mrow" id="MathJax-Span-24"><span class="msubsup" id="MathJax-Span-25"><span style="display: inline-block; position: relative; width: 1.151em; height: 0px;"><span style="position: absolute; clip: rect(3.383em, 1000.64em, 4.212em, -999.997em); top: -4.015em; left: 0em;"><span class="mi" id="MathJax-Span-26" style="font-family: STIXGeneral-Italic;">w</span><span style="display: inline-block; width: 0px; height: 4.021em;"></span></span><span style="position: absolute; top: -3.887em; left: 0.641em;"><span class="texatom" id="MathJax-Span-27"><span class="mrow" id="MathJax-Span-28"><span class="mi" id="MathJax-Span-29" style="font-size: 70.7%; font-family: STIXGeneral-Italic;">L<span style="display: inline-block; overflow: hidden; height: 1px; width: 0.003em;"></span></span></span></span><span style="display: inline-block; width: 0px; height: 4.021em;"></span></span></span></span></span><span style="display: inline-block; width: 0px; height: 2.235em;"></span></span></span><span style="display: inline-block; overflow: hidden; vertical-align: -0.211em; border-left: 0px solid; width: 0px; height: 0.789em;"></span></span></nobr><span class="MJX_Assistive_MathML" role="presentation"><math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>w</mi><mrow class="MJX-TeXAtom-ORD"><mi>L</mi></mrow></msub></math></span></span><script type="math/tex" id="MathJax-Element-3"> w_{L} </script></span> entails <span class="nolink"><span class="MathJax_Preview" style="color: inherit; display: none;"></span><span class="MathJax" id="MathJax-Element-4-Frame" tabindex="0" data-mathml="&lt;math xmlns=&quot;http://www.w3.org/1998/Math/MathML&quot;&gt;&lt;msub&gt;&lt;mi&gt;w&lt;/mi&gt;&lt;mrow class=&quot;MJX-TeXAtom-ORD&quot;&gt;&lt;mi&gt;R&lt;/mi&gt;&lt;/mrow&gt;&lt;/msub&gt;&lt;/math&gt;" role="presentation" style="position: relative;"><nobr aria-hidden="true"><span class="math" id="MathJax-Span-30" style="width: 1.279em; display: inline-block;"><span style="display: inline-block; position: relative; width: 1.151em; height: 0px; font-size: 112%;"><span style="position: absolute; clip: rect(1.598em, 1001.15em, 2.554em, -999.997em); top: -2.229em; left: 0em;"><span class="mrow" id="MathJax-Span-31"><span class="msubsup" id="MathJax-Span-32"><span style="display: inline-block; position: relative; width: 1.151em; height: 0px;"><span style="position: absolute; clip: rect(3.383em, 1000.64em, 4.212em, -999.997em); top: -4.015em; left: 0em;"><span class="mi" id="MathJax-Span-33" style="font-family: STIXGeneral-Italic;">w</span><span style="display: inline-block; width: 0px; height: 4.021em;"></span></span><span style="position: absolute; top: -3.887em; left: 0.641em;"><span class="texatom" id="MathJax-Span-34"><span class="mrow" id="MathJax-Span-35"><span class="mi" id="MathJax-Span-36" style="font-size: 70.7%; font-family: STIXGeneral-Italic;">R</span></span></span><span style="display: inline-block; width: 0px; height: 4.021em;"></span></span></span></span></span><span style="display: inline-block; width: 0px; height: 2.235em;"></span></span></span><span style="display: inline-block; overflow: hidden; vertical-align: -0.211em; border-left: 0px solid; width: 0px; height: 0.789em;"></span></span></nobr><span class="MJX_Assistive_MathML" role="presentation"><math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>w</mi><mrow class="MJX-TeXAtom-ORD"><mi>R</mi></mrow></msub></math></span></span><script type="math/tex" id="MathJax-Element-4"> w_{R} </script></span>, otherwise <span class="nolink"><span class="MathJax_Preview" style="color: inherit; display: none;"></span><span class="MathJax" id="MathJax-Element-5-Frame" tabindex="0" data-mathml="&lt;math xmlns=&quot;http://www.w3.org/1998/Math/MathML&quot;&gt;&lt;mn&gt;0&lt;/mn&gt;&lt;/math&gt;" role="presentation" style="position: relative;"><nobr aria-hidden="true"><span class="math" id="MathJax-Span-37" style="width: 0.577em; display: inline-block;"><span style="display: inline-block; position: relative; width: 0.513em; height: 0px; font-size: 112%;"><span style="position: absolute; clip: rect(1.661em, 1000.51em, 2.746em, -999.997em); top: -2.548em; left: 0em;"><span class="mrow" id="MathJax-Span-38"><span class="mn" id="MathJax-Span-39" style="font-family: STIXGeneral-Regular;">0</span></span><span style="display: inline-block; width: 0px; height: 2.554em;"></span></span></span><span style="display: inline-block; overflow: hidden; vertical-align: -0.068em; border-left: 0px solid; width: 0px; height: 0.932em;"></span></span></nobr><span class="MJX_Assistive_MathML" role="presentation"><math xmlns="http://www.w3.org/1998/Math/MathML"><mn>0</mn></math></span></span><script type="math/tex" id="MathJax-Element-5"> 0 </script></span></p>
+
+<p>The homework questions ask you to define baseline models for this and develop your own system for entry in the bake-off, which will take place on a held-out test-set distributed at the start of the bake-off. (Thus, all the data you have available for
+    development is available for training your final system before the bake-off begins.)</p>
+
+
+
+<h2>Supplemental Materials</h2>
+
+<ul>
+    <li><b><a href="https://www.aclweb.org/anthology/C08-1066.pdf" target="_blank">Modeling Semantic Containment and Exclusion in Natural Language Inference (MacCartney and Manning 2008)</a></b></li>
+    <li><b><a href="https://www.aaai.org/ocs/index.php/SSS/SSS15/paper/view/10221" target="_blank">Learning Distributed Word Representations for Natural Logic Reasoning (Bowman et al. 2015a)</a></b></li>
+    <li><b><a href="https://nlp.stanford.edu/projects/snli/" target="_blank">The Stanford Natural Language Inference (SNLI) Corpus (Bowman et al. 2015b)</a></b></li>
+    <li><b><a href="https://arxiv.org/pdf/1509.06664v1.pdf" target="_blank">Reasoning about Entailment with Neural Attention (Rocktäschel et al. 2015)</a></b></li>
+</ul>
+
+
+
+<h2>Submission Instructions and Links</h2>
+
+<ol>
+    <li><b>COMPLETE THIS STEP AFTER FILLING HOMEWORK CELLS BUT <span style="background-color:yellow;">BEFORE</span> COMPLETING ORIGINAL SYSTEM CELL</b><br> Download your ipython notebook as a python file named <b>hw_wordentail.py</b>.<br> [File &gt; Download
+        As &gt; Python (.py)]
+        <br><br> Downloading your .py before completing the original system cell ensures that the Homework Autograder is not thrown off by any unexpected import statements.<br><br>
+        <b><a href="http://bit.ly/2SU5cIr" target="_blank">Video demo of this process</a></b>
+        <p>&nbsp;</p>
+    </li>
+
+    <li><b>COMPLETE THIS STEP <span style="background-color:yellow;">AFTER</span> COMPLETING YOUR ORIGINAL SYSTEM CELL</b><br> Create a .zip file containing <b>hw_wordentail.py (from Step 1)</b> AND your completed <b>hw_wordentail.ipynb</b> using the command<br><br>        zip assignment3.zip hw_wordentail.py hw_wordentail.ipynb
+        <p>&nbsp;</p>
+    </li>
+
+    <li>Upload the .zip via via the Submission Link below<br><br>
+        <b><a href="http://bit.ly/2TezLaV" target="_blank">Video demo of Steps 2 + 3</a></b></li>
+</ol>
+
+<ul>
+    <li><b><a href="https://learning.stanford.edu/online/mod/lti/view.php?id=19491&amp;program=scpd">Assignment 3 Coding Submission Link</a></b></li>
+</ul>
+<hr>
+<p>Bake-off data will be released after the homework due date. After following the instructions in the bake-off announcement, you can submit your results here:</p>
+<ul>
+    <li><b><a href="https://learning.stanford.edu/online/mod/lti/view.php?id=19491&amp;program=scpd">Assignment 3 Bake-off Submission Link</a></b></li>
+</ul>
+
+
+<p>&nbsp;</p></span></div></div><div class="modified">Last modified: Thursday, 12 March 2020, 3:17 AM</div>
+<link rel="stylesheet" type="text/css" href="./XCS224U-C001_ Assignment 3 Word-level Entailment with Neural Networks_files/dropdownvideo.css">
+<div id="dropdownvideopage" style="display:none;">
+    <a class="slideUpButton"><img src="./XCS224U-C001_ Assignment 3 Word-level Entailment with Neural Networks_files/icon_close.png"></a>
+            <div style="height: 100%;"><iframe id="videocontainer" style="width:100%;height:100%;" src="./XCS224U-C001_ Assignment 3 Word-level Entailment with Neural Networks_files/saved_resource.html" frameborder="0"></iframe></div>
+    </div>
+
+<script type="text/javascript">
+    $('.webinarsVideoPopup').click(function() {
+        
+        var dataUrl = $(this).attr('data-url');
+        var datapdfmoduleid = $(this).attr('data-pdfmoduleid');
+        if(typeof datapdfmoduleid !== "undefined") {
+            dataUrl = dataUrl+'&module_pdf_id='+datapdfmoduleid;    
+        }
+        $('#videocontainer').attr('src',dataUrl);
+        $('#dropdownvideopage').slideDown('slow');
+    });
+    $('.slideUpButton').click(function() {
+        $('#dropdownvideopage').slideUp('slow');
+        $('#videocontainer').attr('src','');
+    });
+    
+    function slideUPFromLiner(moduleid) {
+        $('#dropdownvideopage').slideUp('slow');
+        $('#dropdownvideopage iframe').attr('src','about:blank');
+    }
+
+    var webexWindow = '';
+    function open_win(url) {
+        // $('#webex_window iframe').attr('src','../webex/view.php?id=2571');
+        webexWindow = window.open(url,'','width=2,height=1');
+    }
+
+    function closeWin()
+    {
+        if(webexWindow.close !== undefined)
+            webexWindow.close();
+    }
+    
+    setTimeout(function(){closeWin();},15000);
+</script>
+
+</div>                </section>
+                <aside id="block-region-side-pre" class="span2 desktop-first-column block-region" data-blockregion="side-pre" data-droptarget="1"><a class="skip skip-block" id="fsb-1" href="https://learning.stanford.edu/online/mod/page/view.php?id=19501&amp;program=scpd#sb-1">Skip COURSE CONTENT</a><div id="inst33117" class="block_html  block" role="complementary" data-block="html" data-instanceid="33117" aria-labelledby="instance-33117-header"><div class="header"><div class="title"><div class="block_action"></div><h2 id="instance-33117-header">COURSE CONTENT</h2></div></div><div class="content"><div class="no-overflow"><ul id="main-navigation">
+    <li><a href="https://learning.stanford.edu/online/course/view.php?id=607&amp;program=scpd">Home</a></li>
+    <li><a href="https://learning.stanford.edu/online/pluginfile.php/95118/mod_resource/content/13/XCS224U_Syllabus.pdf" target="_blank">Syllabus</a></li>
+    <!--<li><a href="https://learning.stanford.edu/online/mod/page/view.php?id=19822&amp;program=scpd">Course Set Up</a></li>-->
+    <li><a href="https://learning.stanford.edu/online/grade/report/user/index.php?id=607&amp;program=scpd">Gradebook</a></li>
+
+    <!--
+    <li><a href="https://learning.stanford.edu/online/mod/page/view.php?id=19495&amp;program=scpd">Assignment 2 - DUE OCTOBER 3</a></li>
+    <li><a href="https://learning.stanford.edu/online/mod/page/view.php?id=19501&amp;program=scpd">Assignment 3 - DUE OCOTBER 17</a></li>
+    <li><a href="https://learning.stanford.edu/online/mod/page/view.php?id=19506&amp;program=scpd">Assignment 4 - DUE OCTOBER 31</a></li>
+    <li><a href="https://learning.stanford.edu/online/mod/page/view.php?id=19515&amp;program=scpd">BERT Lab (Ungraded)</a></li>
+    <li><a href="https://learning.stanford.edu/online/mod/page/view.php?id=19511&amp;program=scpd">Assignment 5 - DUE NOVEMBER 17</a></li>
+-->
+</ul></div></div></div><span class="skip-block-to" id="sb-1"></span></aside>            </div>
+        </div>
+        <aside id="block-region-side-post" class="span2 block-region" data-blockregion="side-post" data-droptarget="1"><a class="skip skip-block" id="fsb-3" href="https://learning.stanford.edu/online/mod/page/view.php?id=19501&amp;program=scpd#sb-3">Skip TECHNICAL SUPPORT</a><div id="inst33113" class="block_html  block" role="complementary" data-block="html" data-instanceid="33113" aria-labelledby="instance-33113-header"><div class="header"><div class="title"><div class="block_action"></div><h2 id="instance-33113-header">TECHNICAL SUPPORT</h2></div></div><div class="content"><div class="no-overflow"><p>Submit a <b><a href="https://scpd.stanford.edu/public/student/studentRequestInformation.do?method=edit&amp;type=10" target="_blank">Technical Support Request</a></b> or call 650-741-1593. Available 8:00am-4:00pm PST, M-F.</p></div></div></div><span class="skip-block-to" id="sb-3"></span><a class="skip skip-block" id="fsb-4" href="https://learning.stanford.edu/online/mod/page/view.php?id=19501&amp;program=scpd#sb-4">Skip STUDENT SERVICES</a><div id="inst33116" class="block_html  block" role="complementary" data-block="html" data-instanceid="33116" aria-labelledby="instance-33116-header"><div class="header"><div class="title"><div class="block_action"></div><h2 id="instance-33116-header">STUDENT SERVICES</h2></div></div><div class="content"><div class="no-overflow"><p>For questions relating to course materials, billing, testing, general program information, etc., please contact Student Services at <b><a href="mailto:scpd-ai-proed@stanford.edu?subject=Question%20about%20Natural%20Language%20Understanding">scpd-ai-proed@stanford.edu</a></b>    or 650-725-3000. Available 8:00am-4:00pm PST, M-F.</p></div></div></div><span class="skip-block-to" id="sb-4"></span><a class="skip skip-block" id="fsb-5" href="https://learning.stanford.edu/online/mod/page/view.php?id=19501&amp;program=scpd#sb-5">Skip TEACHING TEAM</a><div id="inst33112" class="block_html  block" role="complementary" data-block="html" data-instanceid="33112" aria-labelledby="instance-33112-header"><div class="header"><div class="title"><div class="block_action"></div><h2 id="instance-33112-header">TEACHING TEAM</h2></div></div><div class="content"><div class="no-overflow"><p>For content-related questions, contact your designated Course Facilitator.</p></div></div></div><span class="skip-block-to" id="sb-5"></span><a class="skip skip-block" id="fsb-6" href="https://learning.stanford.edu/online/mod/page/view.php?id=19501&amp;program=scpd#sb-6">Skip SLACK WORKSPACE</a><div id="inst33135" class="block_html  block" role="complementary" data-block="html" data-instanceid="33135" aria-labelledby="instance-33135-header"><div class="header"><div class="title"><div class="block_action"></div><h2 id="instance-33135-header">SLACK WORKSPACE</h2></div></div><div class="content"><div class="no-overflow"><p>You can access the course Slack channels via the Slack desktop app or directly on the web at <b><a href="https://xcs224u-scpd.slack.com/" target="_blank">xcs224u-scpd.slack.com</a></b>.</p></div></div></div><span class="skip-block-to" id="sb-6"></span></aside>    </div>
+
+    <footer id="page-footer">
+        <div id="course-footer"></div>
+        <p class="helplink"></p>
+        <div class="logininfo">You are logged in as Wei Wu (<a href="https://learning.stanford.edu/online/login/logout.php?sesskey=H8vsmaAx5N">Exit</a>)</div><div class="homelink"><a href="https://learning.stanford.edu/online/course/view.php?id=607">XCS224U-C001</a></div><div class="performanceinfo siteinfo container-fluid"><ul class="list-unstyled m-l-1 row"><li class="timeused col-sm-4">0.184214 secs</li> <li class="memoryused col-sm-4">RAM: 7.2MB</li> <li class="memoryused col-sm-4">RAM peak: 7.2MB</li> </ul><ul class="list-unstyled m-l-1 row"><li class="included col-sm-4">Included 305 files</li> <li class="langcountgetstring col-sm-4">get_string calls: 116 </li> <li class="dbqueries col-sm-4">DB reads/writes: 33/1</li> <li class="dbtime col-sm-4">DB queries time: 0.13073 secs</li> <li class="posixtimes col-sm-4">ticks: 19 user: 4sys: 0 cuser: 0 csys: 0</li> <li class="serverload col-sm-4">Load average: 0.11</li> <li class="serverload col-sm-4"><span class="sessionsize">Session (core\session\memcached): 3.1KB</span> </li></ul><div class="cachesused">Caches used (hits/misses/sets): 0/0/0</div></div>    </footer>
+
+    
+<!-- Global footer start -->
+<div id="global-footer">
+<div id="bottom-logo" class="span2"> <a href="http://www.stanford.edu/"><img src="./XCS224U-C001_ Assignment 3 Word-level Entailment with Neural Networks_files/footer-stanford-logo@2x.png" width="105" height="49" alt="Stanford University"></a> </div>
+<div id="bottom-text" class="span10">
+<ul>
+<li class="home"><a href="http://www.stanford.edu/">SU Home</a></li>
+<li class="maps alt"><a href="http://visit.stanford.edu/plan/maps.html">Maps &amp; Directions</a></li>
+<li class="search-stanford"><a href="http://www.stanford.edu/search/">Search Stanford</a></li>
+<li class="terms alt"><a href="http://www.stanford.edu/site/terms.html">Terms of Use</a></li>
+<li class="copyright"><a href="http://www.stanford.edu/site/copyright.html">Copyright Complaints</a></li>
+</ul>
+<p class="copyright vcard">© <span class="fn org">Stanford University</span>, <span class="adr"> <span class="locality">Stanford</span>, <span class="region">California</span> <span class="postal-code">94305</span> </span></p>
+</div>
+</div>
+<!-- global-footer end --><script type="text/javascript">
+//<![CDATA[
+var require = {
+    baseUrl : 'https://learning.stanford.edu/online/lib/requirejs.php/1584077912/',
+    // We only support AMD modules with an explicit define() statement.
+    enforceDefine: true,
+    skipDataMain: true,
+    waitSeconds : 0,
+
+    paths: {
+        jquery: 'https://learning.stanford.edu/online/lib/javascript.php/1584077912/lib/jquery/jquery-3.2.1.min',
+        jqueryui: 'https://learning.stanford.edu/online/lib/javascript.php/1584077912/lib/jquery/ui-1.12.1/jquery-ui.min',
+        jqueryprivate: 'https://learning.stanford.edu/online/lib/javascript.php/1584077912/lib/requirejs/jquery-private'
+    },
+
+    // Custom jquery config map.
+    map: {
+      // '*' means all modules will get 'jqueryprivate'
+      // for their 'jquery' dependency.
+      '*': { jquery: 'jqueryprivate' },
+      // Stub module for 'process'. This is a workaround for a bug in MathJax (see MDL-60458).
+      '*': { process: 'core/first' },
+
+      // 'jquery-private' wants the real jQuery module
+      // though. If this line was not here, there would
+      // be an unresolvable cyclic dependency.
+      jqueryprivate: { jquery: 'jquery' }
+    }
+};
+
+//]]>
+</script>
+<script type="text/javascript" src="./XCS224U-C001_ Assignment 3 Word-level Entailment with Neural Networks_files/javascript(3).php"></script>
+<script type="text/javascript">
+//<![CDATA[
+require(['core/first'], function() {
+;
+require(["media_videojs/loader"], function(loader) {
+    loader.setUp(function(videojs) {
+        videojs.options.flash.swf = "https://learning.stanford.edu/online/media/player/videojs/videojs/video-js.swf";
+videojs.addLanguage("en",{
+ "Audio Player": "Audio Player",
+ "Video Player": "Video Player",
+ "Play": "Play",
+ "Pause": "Pause",
+ "Replay": "Replay",
+ "Current Time": "Current Time",
+ "Duration Time": "Duration Time",
+ "Remaining Time": "Remaining Time",
+ "Stream Type": "Stream Type",
+ "LIVE": "LIVE",
+ "Loaded": "Loaded",
+ "Progress": "Progress",
+ "Progress Bar": "Progress Bar",
+ "progress bar timing: currentTime={1} duration={2}": "{1} of {2}",
+ "Fullscreen": "Fullscreen",
+ "Non-Fullscreen": "Non-Fullscreen",
+ "Mute": "Mute",
+ "Unmute": "Unmute",
+ "Playback Rate": "Playback Rate",
+ "Subtitles": "Subtitles",
+ "subtitles off": "subtitles off",
+ "Captions": "Captions",
+ "captions off": "captions off",
+ "Chapters": "Chapters",
+ "Descriptions": "Descriptions",
+ "descriptions off": "descriptions off",
+ "Audio Track": "Audio Track",
+ "Volume Level": "Volume Level",
+ "You aborted the media playback": "You aborted the media playback",
+ "A network error caused the media download to fail part-way.": "A network error caused the media download to fail part-way.",
+ "The media could not be loaded, either because the server or network failed or because the format is not supported.": "The media could not be loaded, either because the server or network failed or because the format is not supported.",
+ "The media playback was aborted due to a corruption problem or because the media used features your browser did not support.": "The media playback was aborted due to a corruption problem or because the media used features your browser did not support.",
+ "No compatible source was found for this media.": "No compatible source was found for this media.",
+ "The media is encrypted and we do not have the keys to decrypt it.": "The media is encrypted and we do not have the keys to decrypt it.",
+ "Play Video": "Play Video",
+ "Close": "Close",
+ "Close Modal Dialog": "Close Modal Dialog",
+ "Modal Window": "Modal Window",
+ "This is a modal window": "This is a modal window",
+ "This modal can be closed by pressing the Escape key or activating the close button.": "This modal can be closed by pressing the Escape key or activating the close button.",
+ ", opens captions settings dialog": ", opens captions settings dialog",
+ ", opens subtitles settings dialog": ", opens subtitles settings dialog",
+ ", opens descriptions settings dialog": ", opens descriptions settings dialog",
+ ", selected": ", selected",
+ "captions settings": "captions settings",
+ "subtitles settings": "subititles settings",
+ "descriptions settings": "descriptions settings",
+ "Text": "Text",
+ "White": "White",
+ "Black": "Black",
+ "Red": "Red",
+ "Green": "Green",
+ "Blue": "Blue",
+ "Yellow": "Yellow",
+ "Magenta": "Magenta",
+ "Cyan": "Cyan",
+ "Background": "Background",
+ "Window": "Window",
+ "Transparent": "Transparent",
+ "Semi-Transparent": "Semi-Transparent",
+ "Opaque": "Opaque",
+ "Font Size": "Font Size",
+ "Text Edge Style": "Text Edge Style",
+ "None": "None",
+ "Raised": "Raised",
+ "Depressed": "Depressed",
+ "Uniform": "Uniform",
+ "Dropshadow": "Dropshadow",
+ "Font Family": "Font Family",
+ "Proportional Sans-Serif": "Proportional Sans-Serif",
+ "Monospace Sans-Serif": "Monospace Sans-Serif",
+ "Proportional Serif": "Proportional Serif",
+ "Monospace Serif": "Monospace Serif",
+ "Casual": "Casual",
+ "Script": "Script",
+ "Small Caps": "Small Caps",
+ "Reset": "Reset",
+ "restore all settings to the default values": "restore all settings to the default values",
+ "Done": "Done",
+ "Caption Settings Dialog": "Caption Settings Dialog",
+ "Beginning of dialog window. Escape will cancel and close the window.": "Beginning of dialog window. Escape will cancel and close the window.",
+ "End of dialog window.": "End of dialog window."
+});
+
+    });
+});;
+require(["block_settings/settingsblock"], function(amd) { amd.init("5", null); });;
+
+require(['core/yui'], function(Y) {
+    M.util.init_skiplink(Y);
+});
+;
+
+require(['core/yui'], function(Y) {
+    Y.use('moodle-core-actionmenu', function() {
+        M.core.actionmenu.init();
+    });
+});
+;
+require(["core/notification"], function(amd) { amd.init(92063, []); });;
+require(["core/log"], function(amd) { amd.setConfig({"level":"warn"}); });;
+require(["core/page_global"], function(amd) { amd.init(); });
+});
+//]]>
+</script>
+<script type="text/javascript" src="./XCS224U-C001_ Assignment 3 Word-level Entailment with Neural Networks_files/javascript(4).php"></script>
+<script type="text/javascript" src="./XCS224U-C001_ Assignment 3 Word-level Entailment with Neural Networks_files/javascript(5).php"></script>
+<script type="text/javascript" src="./XCS224U-C001_ Assignment 3 Word-level Entailment with Neural Networks_files/javascript(6).php"></script>
+<script type="text/javascript">
+//<![CDATA[
+M.str = {"moodle":{"lastmodified":"Last modified","name":"Name","error":"Error","info":"Information","yes":"Yes","no":"No","cancel":"Cancel","morehelp":"More help","loadinghelp":"Loading...","confirm":"Confirm","areyousure":"Are you sure?","closebuttontitle":"Close","unknownerror":"Unknown error"},"repository":{"type":"Type","size":"Size","invalidjson":"Invalid JSON string","nofilesattached":"No files attached","filepicker":"File picker","logout":"Logout","nofilesavailable":"No files available","norepositoriesavailable":"Sorry, none of your current repositories can return files in the required format.","fileexistsdialogheader":"File exists","fileexistsdialog_editor":"A file with that name has already been attached to the text you are editing.","fileexistsdialog_filemanager":"A file with that name has already been attached","renameto":"Rename to \"{$a}\"","referencesexist":"There are {$a} alias\/shortcut files that use this file as their source","select":"Select"},"admin":{"confirmdeletecomments":"You are about to delete comments, are you sure?","confirmation":"Confirmation"}};
+//]]>
+</script>
+<script type="text/javascript">
+//<![CDATA[
+(function() {Y.use("moodle-filter_mathjaxloader-loader",function() {M.filter_mathjaxloader.configure({"mathjaxconfig":"\nMathJax.Hub.Config({\n    config: [\"Accessible.js\", \"Safe.js\"],\n    errorSettings: { message: [\"!\"] },\n    skipStartupTypeset: true,\n    messageStyle: \"none\"\n});\n","lang":"en"});
+});
+M.util.help_popups.setup(Y);
+Y.use("moodle-core-popuphelp",function() {M.core.init_popuphelp();
+});
+Y.use("moodle-filter_mathjaxloader-loader",function() {M.filter_mathjaxloader.typeset();
+});
+ M.util.js_pending('random5e88217b059395'); Y.on('domready', function() { M.util.js_complete("init");  M.util.js_complete('random5e88217b059395'); });
+})();
+//]]>
+</script>
+
+</div>
+
+
+
+<div style="position: absolute; width: 0px; height: 0px; overflow: hidden; padding: 0px; border: 0px; margin: 0px;"><div id="MathJax_Font_Test" style="position: absolute; visibility: hidden; top: 0px; left: 0px; width: auto; padding: 0px; border: 0px; margin: 0px; white-space: nowrap; text-align: left; text-indent: 0px; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; font-size: 40px; font-weight: normal; font-style: normal; font-family: STIXSizeOneSym, sans-serif;"></div></div></body></html>
